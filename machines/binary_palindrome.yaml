@@ -1,0 +1,28 @@
+name: binary_palindrome
+states: [q0, q1, q2, q3, q4, q5, q_accept]
+input_alphabet: ["0", "1"]
+tape_alphabet: ["0", "1", "B"]
+blank: "B"
+start_state: q0
+accept_states: [q_accept]
+reject_states: []
+transitions:
+  - {state: q0, read: "0", next: q1, write: "B", move: R}
+  - {state: q1, read: "0", next: q1, write: "0", move: R}
+  - {state: q1, read: "1", next: q1, write: "1", move: R}
+  - {state: q1, read: "B", next: q2, write: "B", move: L}
+  - {state: q2, read: "0", next: q3, write: "B", move: L}
+  - {state: q2, read: "B", next: q_accept, write: "B", move: R}
+  
+  - {state: q0, read: "1", next: q4, write: "B", move: R}
+  - {state: q4, read: "0", next: q4, write: "0", move: R}
+  - {state: q4, read: "1", next: q4, write: "1", move: R}
+  - {state: q4, read: "B", next: q5, write: "B", move: L}
+  - {state: q5, read: "1", next: q3, write: "B", move: L}
+  - {state: q5, read: "B", next: q_accept, write: "B", move: R}
+  
+  - {state: q3, read: "0", next: q3, write: "0", move: L}
+  - {state: q3, read: "1", next: q3, write: "1", move: L}
+  - {state: q3, read: "B", next: q0, write: "B", move: R}
+  
+  - {state: q0, read: "B", next: q_accept, write: "B", move: R}
