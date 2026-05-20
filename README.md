@@ -29,7 +29,7 @@ print("Son Şerit:", result.final_tape.strip("B"))
 print("Atılan Adım Sayısı:", result.steps)
 ```
 
-## Sık Sorulan Sorular (Kenar Durumları)
+## Soru
 **Kafa sola taşarsa (head_position < 0) ne olur?**
 Sonsuz şerit mantığını korumak için, makine sola doğru taştığında şeridin başına (soluna) dinamik olarak yeni bir boş (Blank) karakter eklenir ve kafa konumu sıfırlanarak kesintisiz okuma-yazma yapması sağlanır. Bu yüzden negatif index hatası alınmaz.
 

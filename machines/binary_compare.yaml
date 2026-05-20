@@ -1,0 +1,100 @@
+name: "binary_compare"
+states: [
+  q_seek_B_tie, q_eval_B_tie, q_seek_B_A_wins, q_eval_B_A_wins, q_seek_B_B_wins, q_eval_B_B_wins,
+  q_seek_A_B0_tie, q_eval_A_B0_tie, q_seek_A_B1_tie, q_eval_A_B1_tie,
+  q_seek_A_B0_A_wins, q_eval_A_B0_A_wins, q_seek_A_B1_A_wins, q_eval_A_B1_A_wins,
+  q_seek_A_B0_B_wins, q_eval_A_B0_B_wins, q_seek_A_B1_B_wins, q_eval_A_B1_B_wins,
+  q_check_A_tie, q_check_A_A_wins, q_check_A_B_wins, q_accept
+]
+input_alphabet: ["0", "1", "#"]
+tape_alphabet: ["0", "1", "#", "X", "Y", "B"]
+blank: "B"
+start_state: q_seek_B_tie
+accept_states: [q_accept]
+reject_states: []
+transitions:
+  - {state: q_seek_B_tie, read: "0", next: q_seek_B_tie, write: "0", move: R}
+  - {state: q_seek_B_tie, read: "1", next: q_seek_B_tie, write: "1", move: R}
+  - {state: q_seek_B_tie, read: "#", next: q_seek_B_tie, write: "#", move: R}
+  - {state: q_seek_B_tie, read: "X", next: q_seek_B_tie, write: "X", move: R}
+  - {state: q_seek_B_tie, read: "Y", next: q_seek_B_tie, write: "Y", move: R}
+  - {state: q_seek_B_tie, read: "B", next: q_eval_B_tie, write: "B", move: L}
+  - {state: q_eval_B_tie, read: "Y", next: q_eval_B_tie, write: "Y", move: L}
+  - {state: q_eval_B_tie, read: "0", next: q_seek_A_B0_tie, write: "Y", move: L}
+  - {state: q_eval_B_tie, read: "1", next: q_seek_A_B1_tie, write: "Y", move: L}
+  - {state: q_eval_B_tie, read: "#", next: q_check_A_tie, write: "#", move: L}
+  - {state: q_seek_A_B0_tie, read: "0", next: q_seek_A_B0_tie, write: "0", move: L}
+  - {state: q_seek_A_B0_tie, read: "1", next: q_seek_A_B0_tie, write: "1", move: L}
+  - {state: q_seek_A_B0_tie, read: "Y", next: q_seek_A_B0_tie, write: "Y", move: L}
+  - {state: q_seek_A_B0_tie, read: "#", next: q_eval_A_B0_tie, write: "#", move: L}
+  - {state: q_eval_A_B0_tie, read: "X", next: q_eval_A_B0_tie, write: "X", move: L}
+  - {state: q_eval_A_B0_tie, read: "0", next: q_seek_B_tie, write: "X", move: R}
+  - {state: q_eval_A_B0_tie, read: "1", next: q_seek_B_A_wins, write: "X", move: R}
+  - {state: q_seek_A_B1_tie, read: "0", next: q_seek_A_B1_tie, write: "0", move: L}
+  - {state: q_seek_A_B1_tie, read: "1", next: q_seek_A_B1_tie, write: "1", move: L}
+  - {state: q_seek_A_B1_tie, read: "Y", next: q_seek_A_B1_tie, write: "Y", move: L}
+  - {state: q_seek_A_B1_tie, read: "#", next: q_eval_A_B1_tie, write: "#", move: L}
+  - {state: q_eval_A_B1_tie, read: "X", next: q_eval_A_B1_tie, write: "X", move: L}
+  - {state: q_eval_A_B1_tie, read: "0", next: q_seek_B_B_wins, write: "X", move: R}
+  - {state: q_eval_A_B1_tie, read: "1", next: q_seek_B_tie, write: "X", move: R}
+
+  - {state: q_seek_B_A_wins, read: "0", next: q_seek_B_A_wins, write: "0", move: R}
+  - {state: q_seek_B_A_wins, read: "1", next: q_seek_B_A_wins, write: "1", move: R}
+  - {state: q_seek_B_A_wins, read: "#", next: q_seek_B_A_wins, write: "#", move: R}
+  - {state: q_seek_B_A_wins, read: "X", next: q_seek_B_A_wins, write: "X", move: R}
+  - {state: q_seek_B_A_wins, read: "Y", next: q_seek_B_A_wins, write: "Y", move: R}
+  - {state: q_seek_B_A_wins, read: "B", next: q_eval_B_A_wins, write: "B", move: L}
+  - {state: q_eval_B_A_wins, read: "Y", next: q_eval_B_A_wins, write: "Y", move: L}
+  - {state: q_eval_B_A_wins, read: "0", next: q_seek_A_B0_A_wins, write: "Y", move: L}
+  - {state: q_eval_B_A_wins, read: "1", next: q_seek_A_B1_A_wins, write: "Y", move: L}
+  - {state: q_eval_B_A_wins, read: "#", next: q_check_A_A_wins, write: "#", move: L}
+  - {state: q_seek_A_B0_A_wins, read: "0", next: q_seek_A_B0_A_wins, write: "0", move: L}
+  - {state: q_seek_A_B0_A_wins, read: "1", next: q_seek_A_B0_A_wins, write: "1", move: L}
+  - {state: q_seek_A_B0_A_wins, read: "Y", next: q_seek_A_B0_A_wins, write: "Y", move: L}
+  - {state: q_seek_A_B0_A_wins, read: "#", next: q_eval_A_B0_A_wins, write: "#", move: L}
+  - {state: q_eval_A_B0_A_wins, read: "X", next: q_eval_A_B0_A_wins, write: "X", move: L}
+  - {state: q_eval_A_B0_A_wins, read: "0", next: q_seek_B_A_wins, write: "X", move: R}
+  - {state: q_eval_A_B0_A_wins, read: "1", next: q_seek_B_A_wins, write: "X", move: R}
+  - {state: q_seek_A_B1_A_wins, read: "0", next: q_seek_A_B1_A_wins, write: "0", move: L}
+  - {state: q_seek_A_B1_A_wins, read: "1", next: q_seek_A_B1_A_wins, write: "1", move: L}
+  - {state: q_seek_A_B1_A_wins, read: "Y", next: q_seek_A_B1_A_wins, write: "Y", move: L}
+  - {state: q_seek_A_B1_A_wins, read: "#", next: q_eval_A_B1_A_wins, write: "#", move: L}
+  - {state: q_eval_A_B1_A_wins, read: "X", next: q_eval_A_B1_A_wins, write: "X", move: L}
+  - {state: q_eval_A_B1_A_wins, read: "0", next: q_seek_B_B_wins, write: "X", move: R}
+  - {state: q_eval_A_B1_A_wins, read: "1", next: q_seek_B_A_wins, write: "X", move: R}
+
+  - {state: q_seek_B_B_wins, read: "0", next: q_seek_B_B_wins, write: "0", move: R}
+  - {state: q_seek_B_B_wins, read: "1", next: q_seek_B_B_wins, write: "1", move: R}
+  - {state: q_seek_B_B_wins, read: "#", next: q_seek_B_B_wins, write: "#", move: R}
+  - {state: q_seek_B_B_wins, read: "X", next: q_seek_B_B_wins, write: "X", move: R}
+  - {state: q_seek_B_B_wins, read: "Y", next: q_seek_B_B_wins, write: "Y", move: R}
+  - {state: q_seek_B_B_wins, read: "B", next: q_eval_B_B_wins, write: "B", move: L}
+  - {state: q_eval_B_B_wins, read: "Y", next: q_eval_B_B_wins, write: "Y", move: L}
+  - {state: q_eval_B_B_wins, read: "0", next: q_seek_A_B0_B_wins, write: "Y", move: L}
+  - {state: q_eval_B_B_wins, read: "1", next: q_seek_A_B1_B_wins, write: "Y", move: L}
+  - {state: q_eval_B_B_wins, read: "#", next: q_check_A_B_wins, write: "#", move: L}
+  - {state: q_seek_A_B0_B_wins, read: "0", next: q_seek_A_B0_B_wins, write: "0", move: L}
+  - {state: q_seek_A_B0_B_wins, read: "1", next: q_seek_A_B0_B_wins, write: "1", move: L}
+  - {state: q_seek_A_B0_B_wins, read: "Y", next: q_seek_A_B0_B_wins, write: "Y", move: L}
+  - {state: q_seek_A_B0_B_wins, read: "#", next: q_eval_A_B0_B_wins, write: "#", move: L}
+  - {state: q_eval_A_B0_B_wins, read: "X", next: q_eval_A_B0_B_wins, write: "X", move: L}
+  - {state: q_eval_A_B0_B_wins, read: "0", next: q_seek_B_B_wins, write: "X", move: R}
+  - {state: q_eval_A_B0_B_wins, read: "1", next: q_seek_B_A_wins, write: "X", move: R}
+  - {state: q_seek_A_B1_B_wins, read: "0", next: q_seek_A_B1_B_wins, write: "0", move: L}
+  - {state: q_seek_A_B1_B_wins, read: "1", next: q_seek_A_B1_B_wins, write: "1", move: L}
+  - {state: q_seek_A_B1_B_wins, read: "Y", next: q_seek_A_B1_B_wins, write: "Y", move: L}
+  - {state: q_seek_A_B1_B_wins, read: "#", next: q_eval_A_B1_B_wins, write: "#", move: L}
+  - {state: q_eval_A_B1_B_wins, read: "X", next: q_eval_A_B1_B_wins, write: "X", move: L}
+  - {state: q_eval_A_B1_B_wins, read: "0", next: q_seek_B_B_wins, write: "X", move: R}
+  - {state: q_eval_A_B1_B_wins, read: "1", next: q_seek_B_B_wins, write: "X", move: R}
+
+  - {state: q_check_A_tie, read: "X", next: q_check_A_tie, write: "X", move: L}
+  - {state: q_check_A_tie, read: "0", next: q_accept, write: "0", move: R}
+  - {state: q_check_A_tie, read: "1", next: q_accept, write: "1", move: R}
+  - {state: q_check_A_A_wins, read: "X", next: q_check_A_A_wins, write: "X", move: L}
+  - {state: q_check_A_A_wins, read: "B", next: q_accept, write: "B", move: R}
+  - {state: q_check_A_A_wins, read: "0", next: q_accept, write: "0", move: R}
+  - {state: q_check_A_A_wins, read: "1", next: q_accept, write: "1", move: R}
+  - {state: q_check_A_B_wins, read: "X", next: q_check_A_B_wins, write: "X", move: L}
+  - {state: q_check_A_B_wins, read: "0", next: q_accept, write: "0", move: R}
+  - {state: q_check_A_B_wins, read: "1", next: q_accept, write: "1", move: R}

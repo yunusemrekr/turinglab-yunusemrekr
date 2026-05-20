@@ -1,0 +1,44 @@
+name: "string_copy"
+states: [q_start, q_find_end, q_return, q_mark, q_copy_a, q_copy_b, q_find_blank_a, q_find_blank_b, q_return_mark, q_unmark, q_accept]
+input_alphabet: ["a", "b"]
+tape_alphabet: ["a", "b", "B", "#", "A", "B_"]
+blank: "B"
+start_state: q_start
+accept_states: [q_accept]
+reject_states: []
+transitions:
+  - {state: q_start, read: "a", next: q_find_end, write: "a", move: R}
+  - {state: q_start, read: "b", next: q_find_end, write: "b", move: R}
+  - {state: q_start, read: "B", next: q_accept, write: "B", move: R}
+  
+  - {state: q_find_end, read: "a", next: q_find_end, write: "a", move: R}
+  - {state: q_find_end, read: "b", next: q_find_end, write: "b", move: R}
+  - {state: q_find_end, read: "B", next: q_return, write: "#", move: L}
+  
+  - {state: q_return, read: "a", next: q_return, write: "a", move: L}
+  - {state: q_return, read: "b", next: q_return, write: "b", move: L}
+  - {state: q_return, read: "B", next: q_mark, write: "B", move: R}
+  
+  - {state: q_mark, read: "a", next: q_find_blank_a, write: "A", move: R}
+  - {state: q_mark, read: "b", next: q_find_blank_b, write: "B_", move: R}
+  - {state: q_mark, read: "#", next: q_unmark, write: "#", move: L}
+  
+  - {state: q_find_blank_a, read: "a", next: q_find_blank_a, write: "a", move: R}
+  - {state: q_find_blank_a, read: "b", next: q_find_blank_a, write: "b", move: R}
+  - {state: q_find_blank_a, read: "#", next: q_find_blank_a, write: "#", move: R}
+  - {state: q_find_blank_a, read: "B", next: q_return_mark, write: "a", move: L}
+  
+  - {state: q_find_blank_b, read: "a", next: q_find_blank_b, write: "a", move: R}
+  - {state: q_find_blank_b, read: "b", next: q_find_blank_b, write: "b", move: R}
+  - {state: q_find_blank_b, read: "#", next: q_find_blank_b, write: "#", move: R}
+  - {state: q_find_blank_b, read: "B", next: q_return_mark, write: "b", move: L}
+  
+  - {state: q_return_mark, read: "a", next: q_return_mark, write: "a", move: L}
+  - {state: q_return_mark, read: "b", next: q_return_mark, write: "b", move: L}
+  - {state: q_return_mark, read: "#", next: q_return_mark, write: "#", move: L}
+  - {state: q_return_mark, read: "A", next: q_mark, write: "A", move: R}
+  - {state: q_return_mark, read: "B_", next: q_mark, write: "B_", move: R}
+  
+  - {state: q_unmark, read: "A", next: q_unmark, write: "a", move: L}
+  - {state: q_unmark, read: "B_", next: q_unmark, write: "b", move: L}
+  - {state: q_unmark, read: "B", next: q_accept, write: "B", move: R}

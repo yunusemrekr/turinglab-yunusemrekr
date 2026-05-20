@@ -1,0 +1,46 @@
+name: "unary_to_binary"
+states: [q_init, q_init2, q_find_1, q_go_bin, q_inc, q_inc_overflow, q_return_to_hash, q_cleanup, q_accept]
+input_alphabet: ["1"]
+tape_alphabet: ["1", "0", "X", "#", "B"]
+blank: "B"
+start_state: q_init
+accept_states: [q_accept]
+reject_states: []
+transitions:
+  # Başlangıçta sona # ve 0 ekle
+  - {state: q_init, read: "1", next: q_init, write: "1", move: R}
+  - {state: q_init, read: "B", next: q_init2, write: "#", move: R}
+  - {state: q_init2, read: "B", next: q_find_1, write: "0", move: L}
+  
+  # En sağdaki 1'i bul
+  - {state: q_find_1, read: "0", next: q_find_1, write: "0", move: L}
+  - {state: q_find_1, read: "1", next: q_go_bin, write: "X", move: R}
+  - {state: q_find_1, read: "#", next: q_find_1, write: "#", move: L}
+  - {state: q_find_1, read: "X", next: q_find_1, write: "X", move: L}
+  - {state: q_find_1, read: "B", next: q_cleanup, write: "B", move: R} # 1 kalmadıysa temizle
+  
+  # Binary sayının en sağına git
+  - {state: q_go_bin, read: "X", next: q_go_bin, write: "X", move: R}
+  - {state: q_go_bin, read: "#", next: q_go_bin, write: "#", move: R}
+  - {state: q_go_bin, read: "0", next: q_go_bin, write: "0", move: R}
+  - {state: q_go_bin, read: "1", next: q_go_bin, write: "1", move: R}
+  - {state: q_go_bin, read: "B", next: q_inc, write: "B", move: L}
+  
+  # Binary artırma (Bölüm 1'deki mantık)
+  - {state: q_inc, read: "0", next: q_return_to_hash, write: "1", move: L}
+  - {state: q_inc, read: "1", next: q_inc, write: "0", move: L}
+  - {state: q_inc, read: "#", next: q_inc_overflow, write: "1", move: L} # Taşma durumu
+  
+  # Taşma durumunda # işaretini sola kaydır (yerinde X var)
+  - {state: q_inc_overflow, read: "X", next: q_find_1, write: "#", move: L}
+  
+  # # işaretine dön ve onu geçerek q_find_1'e gir
+  - {state: q_return_to_hash, read: "0", next: q_return_to_hash, write: "0", move: L}
+  - {state: q_return_to_hash, read: "1", next: q_return_to_hash, write: "1", move: L}
+  - {state: q_return_to_hash, read: "#", next: q_find_1, write: "#", move: L}
+  
+  # X ve # karakterlerini sil
+  - {state: q_cleanup, read: "X", next: q_cleanup, write: "B", move: R}
+  - {state: q_cleanup, read: "#", next: q_cleanup, write: "B", move: R}
+  - {state: q_cleanup, read: "0", next: q_accept, write: "0", move: R}
+  - {state: q_cleanup, read: "1", next: q_accept, write: "1", move: R}
